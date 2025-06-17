@@ -17,28 +17,28 @@ class transportationTravelMemberController extends Controller
      */
     public function index(Request $request)
     {
-        $day = '';
+        $tgl = $request->tgl_berangkat ?? date('Y-m-d');
+        $dayEnglish = date('l', strtotime($tgl)); // misal: 'Wednesday'
 
-        if (date('l') == 'Sunday') {
-            $day = 'MINGGU';
-        } elseif (date('l') == 'Monday') {
-            $day = 'SENIN';
-        } elseif (date('l') == 'Tuesday') {
-            $day = 'SELASA';
-        } elseif (date('l') == 'Wednesday') {
-            $day = 'RABU';
-        } elseif (date('l') == 'Thursday') {
-            $day = 'KAMIS';
-        } elseif (date('l') == 'Friday') {
-            $day = 'JUMAT';
-        } elseif (date('l') == 'Saturday') {
-            $day = 'SABTU';
-        }
-        $query = SheduleTravel::query()->where('hari', $day);
+        $dayMap = [
+            'Sunday' => 'MINGGU',
+            'Monday' => 'SENIN',
+            'Tuesday' => 'SELASA',
+            'Wednesday' => 'RABU',
+            'Thursday' => 'KAMIS',
+            'Friday' => 'JUMAT',
+            'Saturday' => 'SABTU',
+        ];
 
-        $data = $query->get();
-        return view('scheduleTravelMember.index')->with([
+        $day = $dayMap[$dayEnglish] ?? null;
+
+        $data = SheduleTravel::with(['transportation', 'route'])
+            ->where('hari', $day)
+            ->get();
+
+        return view('scheduleTravelMember.index', [
             'data' => $data,
+            'tgl' => $tgl
         ]);
     }
 
@@ -72,6 +72,7 @@ class transportationTravelMemberController extends Controller
             'paymentMethod' => $request->input('paymentMethod'),
             'proofOfPayment' => '',
             'notes' => '-',
+            'tgl_berangkat' => $request->input('tgl_berangkat'),
         ];
 
         TransactionsTravel::create($data);
@@ -91,12 +92,13 @@ class transportationTravelMemberController extends Controller
      */
     public function show(string $id)
     {
-        //$data = SheduleTravel::with(['transportation', 'transportation.seat'])->findOrFail($id);
+        $tglBerangkat = request('tgl_berangkat');
         $data = SheduleTravel::with([
             'detailTransportation.detailSeats'
         ])->where('id', $id)->get();
         return view('scheduleTravelMember.seat')->with([
-            'data' => $data
+            'data' => $data,
+            'tglBerangkat' => $tglBerangkat,
         ]);
     }
 

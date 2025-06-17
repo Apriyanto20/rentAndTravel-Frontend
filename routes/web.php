@@ -15,6 +15,7 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ScheduleTravelController;
 use App\Http\Controllers\TransactionsRentalController;
 use App\Http\Controllers\TransactionsTravelController;
+use App\Http\Controllers\TransactionTravelMemberController;
 use App\Http\Controllers\TransportationRentalMemberController;
 use App\Http\Controllers\TransportationsController;
 use App\Http\Controllers\TransportationsRentalDetailController;
@@ -184,6 +185,8 @@ Route::middleware('auth')->group(function () {
 
         return response()->json(['success' => false]);
     });
+
+    Route::resource('transactionTravelMember', TransactionTravelMemberController::class);
 
     Route::get('/generate-code-detail/{type}', [TransportationsRouteController::class, 'generateCodeDetail']);
     Route::get('/transportations-rental/{slug}', [TransportationsRouteController::class, 'category'])->name('transportationsRental.category');

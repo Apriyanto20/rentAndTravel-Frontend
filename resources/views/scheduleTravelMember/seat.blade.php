@@ -41,7 +41,7 @@
     </div>
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script>
-        function updateSeat(codeSchedule, id, routePrice) {
+        function updateSeat(codeSchedule, id, routePrice, tglBerangkat) {
             const modalContent = document.getElementById("modal-content");
             const pemesananStoreUrl = "{{ route('transportationTravelMember.store') }}";
             modalContent.innerHTML = `
@@ -49,6 +49,7 @@
                     <input type="hidden" name="id" value="${codeSchedule}">
                     <input type="hidden" name="seatCode" value="${id}">
                     <input type="hidden" value="${routePrice}" name="routePrice">
+                    <input type="hidden" name="tgl_berangkat" value="${tglBerangkat}">
                     <div class="lg:mb-5 mb-2 w-full">
                         <label for="paymentMethod" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mata Kuliah <span class="text-red-500">*</span></label>
                         <select id="paymentMethod" class="js-example-placeholder-single js-states lg:w-[387px] w-[280px] form-control m-6" name="paymentMethod" data-placeholder="Pilih Metode Pembayaran">
@@ -87,6 +88,7 @@
             console.log("not connected");
         });
         socket.on("seats", (data) => {
+            const tglBerangkat = "{{ request('tgl_berangkat') ?? date('Y-m-d') }}";
             let SeatContent = "";
             for (let i = 0; i < data.length; i++) {
                 SeatContent += `
@@ -98,7 +100,7 @@
                         } w-16 h-16 text-center flex items-center justify-center mb-5"
                         ${
                             data[i].statusSeat === 'ACTIVE' || data[i].statusSeat === 'WAITING'
-                                ? `onclick="updateSeat('${data[i].codeSchedule}', '${data[i].seatCode}', '${data[i].routePrice}')"`
+                                ? `onclick="updateSeat('${data[i].codeSchedule}', '${data[i].seatCode}', '${data[i].routePrice}', '${tglBerangkat}')"`
                                 : ''
                         }
                     >

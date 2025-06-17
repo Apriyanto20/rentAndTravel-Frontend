@@ -18,6 +18,7 @@ class TransactionsTravel extends Model
         'paymentMethod',
         'proofOfPayment',
         'notes',
+        'tgl_berangkat',
     ];
 
     protected $table = 'transactions_travel';
