@@ -24,6 +24,7 @@ use App\Http\Controllers\TransportationsTravelController;
 use App\Http\Controllers\TransportationsTravelDetailController;
 use App\Http\Controllers\transportationTravelMemberController;
 use App\Http\Controllers\VerificationRentalController;
+use App\Models\DetailSeat;
 use App\Models\Drivers;
 use App\Models\TransactionsRental;
 use App\Models\TransactionsTravel;
@@ -159,6 +160,30 @@ Route::middleware('auth')->group(function () {
     Route::resource('schedule', ScheduleTravelController::class);
     Route::resource('transportationTravelMember', transportationTravelMemberController::class);
     Route::post('/transportationsTravel/check-expired', [TransportationsTravelController::class, 'checkExpired'])->name('transportationsTravel.checkExpired');
+    Route::post('/transactionsTravel/cancel/{id}', function ($id) {
+        $trans = TransactionsTravel::find($id);
+
+        // Pastikan transaksi ditemukan dan memenuhi kondisi
+        if ($trans && !$trans->proofOfPayment && $trans->paymentStatus !== 'CANCEL') {
+            $seatCode = $trans->seat_code;
+
+            // Ambil detail seat berdasarkan seat_code
+            $detailSeat = DetailSeat::where('seat_code', $seatCode)->first();
+
+            $trans->paymentStatus = 'CANCEL';
+            $trans->save();
+
+            // Pastikan detail seat ditemukan
+            if ($detailSeat) {
+                $detailSeat->statusSeat = 'ACTIVE';
+                $detailSeat->save();
+            }
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false]);
+    });
 
     Route::get('/generate-code-detail/{type}', [TransportationsRouteController::class, 'generateCodeDetail']);
     Route::get('/transportations-rental/{slug}', [TransportationsRouteController::class, 'category'])->name('transportationsRental.category');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetailSeat;
 use App\Models\Drivers;
 use App\Models\Merk;
+use App\Models\TransactionsTravel;
 use App\Models\TransportationsTravelDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

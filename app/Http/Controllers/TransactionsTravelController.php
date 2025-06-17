@@ -54,6 +54,18 @@ class TransactionsTravelController extends Controller
         return response()->json(['updated' => false]);
     }
 
+    public function autoCancel($id)
+    {
+        $transaction = TransactionsTravel::findOrFail($id);
+
+        if (!$transaction->proofOfPayment && $transaction->paymentStatus !== 'CANCEL') {
+            $transaction->paymentStatus = 'CANCEL';
+            $transaction->save();
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
