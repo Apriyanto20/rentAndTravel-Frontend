@@ -232,7 +232,7 @@
                                         </div>
                                     </x-dropdown-link>
 
-                                    <x-dropdown-link :href="route('reportRental.index')" :class="request()->routeIs('reportRental.index')
+                                    <x-dropdown-link :href="route('reportTravel.index')" :class="request()->routeIs('reportTravel.index')
                                         ? 'text-gray-500 font-bold'
                                         : ''">
                                         <div class="flex items-center justify-start gap-5">
@@ -246,22 +246,22 @@
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('coba')" :active="request()->routeIs('coba')">
                             <div
                                 class="text-[16px] font-bold tracking-wide {{ request()->routeIs('coba') || request()->routeIs('coba') ? 'text-black' : '' }}">
                                 COBA</div>
                         </x-nav-link>
-                    </div>
+                    </div> --}}
 
                     <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('cobaLoop')" :active="request()->routeIs('cobaLoop')">
                             <div
                                 class="text-[16px] font-bold tracking-wide {{ request()->routeIs('cobaLoop') || request()->routeIs('cobaLoop') ? 'text-black' : '' }}">
                                 COBA LOOP</div>
                         </x-nav-link>
-                    </div>
+                    </div> --}}
                 @endcan
                 @can('role-M')
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -333,9 +333,26 @@
                                             <div>Pembayaran</div>
                                         </div>
                                     </x-dropdown-link>
+                                    <x-dropdown-link :href="route('historyMember.index')" :class="request()->routeIs('historyMember.index')
+                                        ? 'text-gray-500 font-bold'
+                                        : ''">
+                                        <div class="flex items-center justify-start gap-5">
+                                            <div class="mt-1"><i class="fi fi-ss-receipt"></i></div>
+                                            <div>History</div>
+                                        </div>
+                                    </x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
                         </li>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('transactionTravelMember.index')" :active="request()->routeIs('transactionTravelMember.index')">
+                            <div
+                                class="text-[16px] font-bold tracking-wide {{ request()->routeIs('transactionTravelMember.index') || request()->routeIs('transactionTravelMember.index') ? 'text-black' : '' }}">
+                                Transaksi Travel</div>
+                        </x-nav-link>
                     </div>
                 @endcan
             </div>

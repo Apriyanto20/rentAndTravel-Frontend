@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Members;
+use App\Models\TransactionsTravel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionTravelMemberController extends Controller
 {
@@ -11,7 +14,17 @@ class TransactionTravelMemberController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user()->email;
+        $member = Members::where('email', $user)->first();
+        $nik = $member->nik;
+        $photo = $member->photo;
+        $data = TransactionsTravel::where('nik', $nik)->get();
+        //dd($data);
+        return view('historyTravel.index')->with([
+            'data' => $data,
+            'photo' => $photo,
+            'member' => $member,
+        ]);
     }
 
     /**
@@ -51,7 +64,21 @@ class TransactionTravelMemberController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $transaction = TransactionsTravel::findOrFail($id);
+        $kode = date('YmdHis');
+        if ($request->hasFile('proof_of_payment')) {
+            $proofOfPayment = $request->file('proof_of_payment');
+            $proofOfPaymentFileName = $kode . '-qris.' . $proofOfPayment->extension();
+            $proofOfPayment->move(public_path('travel/payment/'), $proofOfPaymentFileName);
+
+            $transaction->proofOfPayment = $proofOfPaymentFileName;
+            $transaction->paymentStatus = 'SUCCESS';
+            $transaction->save();
+
+            return redirect()->back()->with('message_insert', 'Pembayaran Success');
+        } else {
+            return redirect()->back()->with('error', 'Bukti Pembayaran tidak ditemukan');
+        }
     }
 
     /**

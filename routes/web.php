@@ -11,6 +11,7 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentalOptionsController;
 use App\Http\Controllers\ReportTransactionsRentalController;
+use App\Http\Controllers\ReportTransactionsTravelController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ScheduleTravelController;
 use App\Http\Controllers\TransactionsRentalController;
@@ -187,6 +188,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::resource('transactionTravelMember', TransactionTravelMemberController::class);
+    Route::resource('reportTravel', ReportTransactionsTravelController::class);
+    Route::get('/reportTravel/pdf', [ReportTransactionsTravelController::class, 'pdf'])->name('reportTravel.pdf');
+    Route::get('/reportTravel/export/excel', [ReportTransactionsTravelController::class, 'exportExcel'])->name('reportTravel.export.excel');
 
     Route::get('/generate-code-detail/{type}', [TransportationsRouteController::class, 'generateCodeDetail']);
     Route::get('/transportations-rental/{slug}', [TransportationsRouteController::class, 'category'])->name('transportationsRental.category');

@@ -33,8 +33,29 @@ class TransactionsTravel extends Model
         return $this->belongsTo(Members::class, 'nik', 'nik');
     }
 
-    public function transportationRental()
+    public function transportationTravel()
     {
-        return $this->belongsTo(TransportationsRentalDetail::class, 'codeDetailTransportation', 'codeDetailTransportation');
+        return $this->belongsTo(TransportationsTravelDetail::class, 'codeDetailTransportation', 'codeDetailTransportation');
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(SheduleTravel::class, 'codeSchedule', 'codeSchedule');
+    }
+
+    public static function singkat($nama)
+    {
+        $nama = strtoupper($nama);
+        $vokal = ['A', 'I', 'U', 'E', 'O'];
+        $hasil = '';
+
+        for ($i = 0; $i < strlen($nama); $i++) {
+            if (!in_array($nama[$i], $vokal)) {
+                $hasil .= $nama[$i];
+                if (strlen($hasil) == 3) break;
+            }
+        }
+
+        return $hasil;
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Laporan Rental</title>
+    <title>Laporan Travel</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -10,7 +10,7 @@
     </style>
 </head>
 <body>
-    <h3>Laporan Transaksi Rental</h3>
+    <h3>Laporan Transaksi Travel</h3>
     <p>Periode: {{ $travelStartDate }} s/d {{ $travelEndDate }}</p>
 
     <table>
@@ -18,14 +18,10 @@
             <tr>
                 <th>WAKTU TRANSAKSI</th>
                 <th>MEMBER</th>
-                <th>TRANSPORTASI</th>
-                <th>MERK</th>
-                <th>MODEL</th>
-                <th>TANGGAL</th>
+                <th>HARGA</th>
                 <th>METODE PEMBAYARAN</th>
                 <th>STATUS PEMBAYARAN</th>
-                <th>STATUS RENTAL</th>
-                <th>TOTAL</th>
+                <th>TANGGAL BERANGKAT</th>
             </tr>
         </thead>
         <tbody>
@@ -33,14 +29,10 @@
             <tr>
                 <td>{{ $item->created_at }}</td>
                 <td>{{ $item->member->name ?? '-' }}</td>
-                <td>{{ $item->transportationRental->transportation->transportation ?? '-', }}</td>
-                <td>{{ $item->transportationRental->merk->merk ?? '-' }}</td>
-                <td>{{ $item->transportationRental->model ?? '-' }}</td>
-                <td>{{ $item->rentalStartDate . ' s/d ' . $item->rentalEndDate }}</td>
+                <td>{{ number_format($item->price) }}</td>
                 <td>{{ $item->paymentMethod }}</td>
                 <td>{{ $item->paymentStatus }}</td>
-                <td>{{ $item->rentalStatus }}</td>
-                <td>{{ number_format($item->rentalCost) }}</td>
+                <td>{{ $item->tgl_berangkat }}</td>
             </tr>
             @endforeach
         </tbody>
