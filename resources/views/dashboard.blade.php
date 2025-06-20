@@ -7,10 +7,6 @@
 
     <div class="py-12">
         <div class="max-w-8xl mx-auto sm:px-6 lg:px-8">
-            {{-- <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"> --}}
-            {{-- <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div> --}}
             @can('role-D')
                 <div class="flex items-center gap-5">
                     <div class="w-full">
@@ -318,9 +314,232 @@
                     </div>
                 </div>
             @endcan
-            {{-- </div> --}}
+            @can('role-M')
+                <div class="grid grid-cols-4 gap-5">
+                    <div
+                        class="w-full bg-emerald-100 border-2 border-emerald-300 p-5 rounded-3xl flex items-center justify-between">
+                        <div class="font-bold text-emerald-500">Transportasi Rental</div>
+                        <div class="font-bold text-xl text-emerald-500">100</div>
+                    </div>
+                    <div
+                        class="w-full bg-emerald-50 border-2 border-emerald-300 p-5 rounded-3xl flex items-center justify-between">
+                        <div class="font-bold text-emerald-500">Transportasi Travel</div>
+                        <div class="font-bold text-xl text-emerald-500">180</div>
+                    </div>
+                    <div
+                        class="w-full bg-emerald-50 border-2 border-emerald-300 p-5 rounded-3xl flex items-center justify-between">
+                        <div class="font-bold text-emerald-500">Rute Transportasi</div>
+                        <div class="font-bold text-xl text-emerald-500">180</div>
+                    </div>
+                    <div
+                        class="w-full bg-emerald-100 border-2 border-emerald-300 p-5 rounded-3xl flex items-center justify-between">
+                        <div class="font-bold text-emerald-500">Transaksi</div>
+                        <div class="font-bold text-xl text-emerald-500">100</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="grid grid-cols-2 gap-5 mt-6">
+                        <div class="bg-white p-5 rounded-3xl">
+                            <div class="text-center font-bold mb-3">Distribusi Transportasi</div>
+                            <canvas id="transportPieChart"></canvas>
+                        </div>
+                        <div class="bg-white p-5 rounded-3xl">
+                            <div class="text-center font-bold mb-3">Top 5 Pelanggan Aktif</div>
+                            <canvas id="topMemberChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            @endcan
+            @can('role-A')
+                <div>
+                    <div class="bg-white p-5 rounded-3xl">
+                        <div class="bg-gray-200 p-4 mb-4 rounded-3xl font-bold text-center">Grafik Peminat Rute Travel
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="travelChart" style="width: 900px; height: 200px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 rounded-3xl mt-4">
+                        <div class="bg-gray-200 p-4 mb-4 rounded-3xl font-bold text-center">Grafik Transaksi Rental
+                            Bulan Juni</div>
+                        <div class="chart-container">
+                            <canvas id="rentalChart" style="width: 900px; height: 200px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            @endcan
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // === Pie Chart: Distribusi Transportasi ===
+        const transportData = {
+            labels: ['Rental', 'Travel'],
+            datasets: [{
+                label: 'Distribusi Transportasi',
+                data: [100, 180], // Ganti dengan data real dari backend jika ada
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 205, 86, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 205, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const transportConfig = {
+            type: 'pie',
+            data: transportData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        };
+
+        new Chart(
+            document.getElementById('transportPieChart'),
+            transportConfig
+        );
+
+
+        // === Bar Chart: Top 5 Pelanggan Aktif ===
+        const memberData = {
+            labels: ['Ali', 'Budi', 'Citra', 'Dian', 'Eka'], // Nama pelanggan
+            datasets: [{
+                label: 'Jumlah Transaksi',
+                data: [12, 10, 8, 6, 5], // Jumlah transaksi
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        };
+
+        const memberConfig = {
+            type: 'bar',
+            data: memberData,
+            options: {
+                indexAxis: 'y', // Horizontal bar
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Transaksi'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nama Pelanggan'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(
+            document.getElementById('topMemberChart'),
+            memberConfig
+        );
+    </script>
+
+    <script>
+        const rentalLabels = ['1 Juni', '2 Juni', '3 Juni', '4 Juni', '5 Juni', '6 Juni', '7 Juni'];
+        const rentalData = {
+            labels: rentalLabels,
+            datasets: [{
+                label: 'Jumlah Transaksi',
+                data: [5, 8, 6, 7, 10, 4, 9],
+                backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                borderColor: 'rgb(255, 159, 64)',
+                borderWidth: 1
+            }]
+        };
+
+        const rentalConfig = {
+            type: 'bar',
+            data: rentalData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Transaksi'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('rentalChart'), rentalConfig);
+    </script>
+
+    <script>
+        const routeLabels = [
+            'BANJAR–BANDUNG',
+            'BANJAR–JAKARTA',
+            'BANJAR–GARUT',
+            'BANJAR–CIAMIS',
+            'BANJAR–YOGYAKARTA',
+            'BANJAR–DEPOK',
+            'BANJAR–BEKASI'
+        ];
+
+        const routeData = {
+            labels: routeLabels,
+            datasets: [{
+                label: 'Jumlah Peminat per Rute',
+                data: [120, 90, 75, 60, 45, 30, 25],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        };
+
+        const routeConfig = {
+            type: 'bar',
+            data: routeData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Peminat'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Rute Perjalanan'
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('travelChart'), routeConfig);
+    </script>
+
+
+    </script>
     @php
         // untuk tooltip “Rp xxx” lebih rapih
         $fmt = new \NumberFormatter('id_ID', \NumberFormatter::CURRENCY);
