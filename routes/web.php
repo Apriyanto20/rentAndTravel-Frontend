@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DetailSeatController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\HistoryDriverController;
@@ -38,8 +39,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('guest')->group(function () {
+    // Ketika buka halaman utama, redirect ke /login
+    Route::get('/', function () {
+        return redirect()->route('login');
+    });
+
+    // Halaman login
+    Route::get('login', [AuthenticatedSessionController::class, 'create'])
+        ->name('login');
 });
 
 Route::get('/dashboard', function () {

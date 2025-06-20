@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Wheel Bloom</title>
+    <link rel="icon" href="{{ asset('assets/img/brandLogo.png') }}" type="image/png">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -17,6 +18,20 @@
     <style>
         #content-faktur {
             font-family: 'Roboto Mono', monospace;
+        }
+
+        #preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            background-color: #ffffff;
+            /* Background transparan 50% */
         }
     </style>
 
@@ -134,6 +149,10 @@
 </head>
 
 <body class="antialiased">
+    <div id="preloader" class="">
+        <div><dotlottie-player src="{{ url('json/animation.json') }}" background="transparent" speed="1"
+                class="lg:w-[600px] lg:h-[500px] hidden lg:block" loop autoplay></dotlottie-player></div>
+    </div>
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 
@@ -155,6 +174,19 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        // Hide preloader and show content when the page is fully loaded
+        window.addEventListener('load', function() {
+            const preloader = document.getElementById('preloader');
+            const content = document.getElementById('content');
+
+            // Delay hiding the preloader by 60 seconds (60000 milliseconds)
+            setTimeout(function() {
+                preloader.style.display = 'none'; // Hide preloader after 1 minute
+                content.style.display = 'block'; // Show main content
+            }, 1000); // 60000 milliseconds = 1 minute
+        });
+    </script>
+    <script>
         // In your Javascript (external .js resource or <script> tag)
         $(".js-example-placeholder-single").select2({
             placeholder: "Pilih...",
@@ -163,7 +195,7 @@
             width: 'resolve'
         });
     </script>
-
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
 </body>
 @stack('scripts')
 
